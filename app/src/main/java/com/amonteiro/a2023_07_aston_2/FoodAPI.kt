@@ -26,6 +26,8 @@ object FoodAPI {
         //requete
         var json : String =  sendGet(URLAPI + "/parser?nutrition-type=cooking&category%5B0%5D=generic-foods&health%5B0%5D=alcohol-free")
 
+
+
         //parsing
         val res =  gson.fromJson(json, FoodResultBean::class.java)
 
