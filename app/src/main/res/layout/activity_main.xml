@@ -8,17 +8,20 @@
     tools:context=".MainActivity">
 
     <RadioGroup
+        android:id="@+id/rg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <RadioButton
+            android:id="@+id/rbLike"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="J'aime"/>
 
         <RadioButton
+            android:id="@+id/rbDislike"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -46,6 +49,7 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/iv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

@@ -1,11 +1,10 @@
 package com.amonteiro.a2023_07_aston_2
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.amonteiro.a2023_07_aston_2.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity() {
 
     //instancie les composants graphiques à la 1er utilisation grâce à lazy
     val binding by lazy {ActivityMainBinding.inflate(layoutInflater)}
@@ -16,19 +15,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         //Affiche une interface graphique
         setContentView(binding.root)
 
+        //Callback du clic sur le bouton
         binding.btValidate.setOnClickListener {
-            binding.et.setText("Clic sur valider")
+            if(binding.rbLike.isChecked) {
+                binding.et.setText(binding.rbLike.text)
+            }
+            else if(binding.rbDislike.isChecked) {
+                binding.et.setText(binding.rbDislike.text)
+            }
+
+            binding.iv.setImageResource(R.drawable.baseline_flag_24)
+            binding.iv.setColorFilter(getColor(R.color.myblue))
         }
 
-        binding.btCancel.setOnClickListener(this)
+        binding.btCancel.setOnClickListener {
+            binding.rg.clearCheck()
+            binding.et.setText("")
+            binding.iv.setImageResource(R.drawable.baseline_delete_forever_24)
+        }
 
     }
 
-    //callback d'un click sur le bouton
-    override fun onClick(v: View?) {
-        if(v === binding.btCancel) {
-            binding.et.setText("Clic sur annuler")
-        }
-    }
 
 }
