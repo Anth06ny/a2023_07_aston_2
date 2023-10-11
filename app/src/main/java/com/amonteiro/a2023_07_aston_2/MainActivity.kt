@@ -10,6 +10,7 @@ import com.amonteiro.a2023_07_aston_2.databinding.ActivityMainBinding
 
 const val MENU_WEATHER = 1
 const val MENU_SPORT = 2
+const val MENU_MEXICAN = 3
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.add(0, MENU_WEATHER, 0, "Météo")
         menu.add(0, MENU_SPORT, 0, "Sport")
+        menu.add(0, MENU_MEXICAN, 0, "Meixcan food")
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -64,6 +66,10 @@ class MainActivity : AppCompatActivity() {
         }
         else if(item.itemId == MENU_SPORT) {
             val intent = Intent(this, AmericanSportActivity::class.java)
+            startActivity(intent)
+        }
+        else if(item.itemId == MENU_MEXICAN) {
+            val intent = Intent(this, MexicanFoodActivity::class.java)
             startActivity(intent)
         }
         return super.onOptionsItemSelected(item)
