@@ -7,7 +7,6 @@ import okhttp3.Request
 fun main() {
     val tab = AmericanSportAPI.loadAllSports()
 
-
     //tab.filter { it.group == "American Football" }.forEach { println(it) }
     tab.map { it.description }.sortedBy { it }.forEach { println(it) }
 }
@@ -18,7 +17,7 @@ object AmericanSportAPI {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-            .url("https://odds.p.rapidapi.com/v4/sports?all=dzijd$all")
+            .url("https://odds.p.rapidapi.com/v4/sports?all=$all")
             .get()
             .addHeader("X-RapidAPI-Key", "93329c7cf9msha136bd696cd1040p10a1dejsnbc52cdb0746e")
             .addHeader("X-RapidAPI-Host", "odds.p.rapidapi.com")

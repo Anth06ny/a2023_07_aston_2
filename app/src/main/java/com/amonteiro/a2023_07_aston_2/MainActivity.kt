@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.amonteiro.a2023_07_aston_2.databinding.ActivityMainBinding
 
 const val MENU_WEATHER = 1
+const val MENU_SPORT = 2
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,9 +44,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
     //Callback création du menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.add(0, MENU_WEATHER, 0, "Météo")
+        menu.add(0, MENU_SPORT, 0, "Sport")
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -56,6 +60,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, WeatherActivity::class.java)
             intent.putExtra("cle", binding.et.text.toString())
 
+            startActivity(intent)
+        }
+        else if(item.itemId == MENU_SPORT) {
+            val intent = Intent(this, AmericanSportActivity::class.java)
             startActivity(intent)
         }
         return super.onOptionsItemSelected(item)
