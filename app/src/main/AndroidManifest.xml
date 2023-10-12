@@ -17,10 +17,10 @@
             android:exported="true" />
         <activity
             android:name=".AmericanSportActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".WeatherActivity"
-            android:exported="false"
+            android:exported="true"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
