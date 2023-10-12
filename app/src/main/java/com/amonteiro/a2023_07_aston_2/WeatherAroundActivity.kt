@@ -17,7 +17,7 @@ class WeatherAroundActivity : AppCompatActivity() {
 
         binding.btAdd.setOnClickListener {
             //Modification des données
-            list.add(WindBean(list.size.toDouble()))
+            list.add(0, WindBean(list.size.toDouble()))
             //Affichage
             refreshScreen()
         }
