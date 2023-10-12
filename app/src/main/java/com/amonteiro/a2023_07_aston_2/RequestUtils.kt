@@ -14,6 +14,8 @@ object RequestUtils {
 
     fun loadWeather(cityName : String) : WeatherBean {
 
+        Thread.sleep(5000)
+
         //Controle
         if(cityName.trim().length < 3) {
             throw Exception("Il faut au moins 3 caractères")

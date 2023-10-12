@@ -3,6 +3,7 @@ package com.amonteiro.a2023_07_aston_2
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.amonteiro.a2023_07_aston_2.databinding.ActivityWeatherBinding
@@ -15,76 +16,62 @@ class WeatherActivity : AppCompatActivity() {
     val binding by lazy { ActivityWeatherBinding.inflate(layoutInflater) }
 
     //Données
-   val model by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
+    val model by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-//        val value = intent.getStringExtra("cle")
-//        binding.tv.setText(value)
-
+        observe()
         binding.btLoad.setOnClickListener {
-
-            //Avant car c'est un composant graphique
             var city = binding.et.text.toString()
-            binding.progressBar.isVisible = true
+            model.loadData(city)
+        }
+    }
 
-            thread {
-                model.loadData(city)
-                //J'actualise l'écran
-                runOnUiThread {
-                    binding.progressBar.isVisible = false
-                    refreshScreen()
-                }
+    fun observe() {
+        model.data.observe(this) {
+            binding.tv.text = "Il fait ${it?.main?.temp ?: "-"}° à ${it?.name ?: "-"} avec un vent de ${it?.wind?.speed ?: "-"} m/s"
+            it?.weather?.getOrNull(0)?.icon?.let {
+                Picasso.get().load("https://openweathermap.org/img/wn/$it@4x.png").into(binding.imageView);
             }
         }
 
-        refreshScreen()
-    }
-
-
-    fun refreshScreen(){
-        //Data
-        binding.tv.text = "Il fait ${model.data?.main?.temp ?: "-"}° à ${model.data?.name ?: "-"} avec un vent de ${model.data?.wind?.speed ?: "-"} m/s"
-        model.data?.weather?.getOrNull(0)?.icon?.let {
-            Picasso.get().load("https://openweathermap.org/img/wn/$it@4x.png").into(binding.imageView);
+        model.errorMessage.observe(this) {
+            binding.tvError.text = it
+            binding.tvError.isVisible = it.isNotBlank()
         }
 
-        //Message d'erreur
-        binding.tvError.text =  model.errorMessage ?: ""
-        binding.tvError.isVisible =  !model.errorMessage.isNullOrBlank()
-
-//        val errorMessage = model.errorMessage
-//        if(errorMessage!= null) {
-//            binding.tvError.isVisible =  true
-//            binding.tvError.text =  errorMessage
-//        }
-//        else {
-//            binding.tvError.isVisible =  false
-//        }
-
+        model.runInProgress.observe(this) {
+            binding.progressBar.isVisible = it
+        }
     }
+
 }
 
-class WeatherViewModel : ViewModel(){
-    var data : WeatherBean? = null
-    var errorMessage:String? = null
+class WeatherViewModel : ViewModel() {
+    //var data : WeatherBean? = null
+    var data = MutableLiveData<WeatherBean?>(null)
+    var errorMessage = MutableLiveData("")
+    var runInProgress = MutableLiveData(false)
 
-    fun loadData(cityName:String){
+    fun loadData(cityName: String) {
         //reset de donnée
-        errorMessage = null
-        data = null
+        errorMessage.postValue("")
+        data.postValue(null)
+        runInProgress.postValue(true)
 
-
-        try {
-            //cas qui marche
-            data = RequestUtils.loadWeather(cityName)
-        }
-        catch (e: Exception) {
-            //Cas qui ne marche pas
-            e.printStackTrace()
-            errorMessage = "Erreur : ${e.message}"
+        thread {
+            try {
+                //cas qui marche
+                data.postValue(RequestUtils.loadWeather(cityName))
+            }
+            catch (e: Exception) {
+                //Cas qui ne marche pas
+                e.printStackTrace()
+                errorMessage.postValue("Erreur : ${e.message}")
+            }
+            runInProgress.postValue(false)
         }
     }
 
