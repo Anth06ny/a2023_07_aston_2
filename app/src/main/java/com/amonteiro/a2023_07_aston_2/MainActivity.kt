@@ -12,6 +12,7 @@ const val MENU_WEATHER = 1
 const val MENU_SPORT = 2
 const val MENU_MEXICAN = 3
 const val MENU_RV = 4
+const val MENU_MAPS = 5
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         menu.add(0, MENU_SPORT, 0, "Sport")
         menu.add(0, MENU_MEXICAN, 0, "Meixcan food")
         menu.add(0, MENU_RV, 0, "RecyclerView")
+        menu.add(0, MENU_MAPS, 0, "ISS")
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -76,6 +78,10 @@ class MainActivity : AppCompatActivity() {
         }
         else if(item.itemId == MENU_RV) {
             val intent = Intent(this, WeatherAroundActivity::class.java)
+            startActivity(intent)
+        }
+        else if(item.itemId == MENU_MAPS) {
+            val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
         return super.onOptionsItemSelected(item)

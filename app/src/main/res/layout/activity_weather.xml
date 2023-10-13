@@ -62,4 +62,10 @@
         android:layout_height="wrap_content"
         android:text="My Loc" />
 
+    <Button
+        android:id="@+id/btLiveLoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My live loc" />
+
 </LinearLayout>

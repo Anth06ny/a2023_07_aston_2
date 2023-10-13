@@ -1,5 +1,6 @@
 package com.amonteiro.a2023_07_aston_2
 
+import com.google.android.gms.maps.model.LatLng
 import java.util.Random
 
 fun main() {
@@ -54,6 +55,16 @@ data class WeatherBean(var name: String, var main: TempBean, var wind: WindBean,
 data class TempBean(var temp: Double)
 data class WindBean(var speed: Double)
 data class DescriptionBean(var icon: String)
+
+/* -------------------------------- */
+// ISS
+/* -------------------------------- */
+data class ISSResultBean(
+    var iss_position: LatLng,
+    var message: String,
+    var timestamp: Int
+)
+
 
 /* -------------------------------- */
 // EXO

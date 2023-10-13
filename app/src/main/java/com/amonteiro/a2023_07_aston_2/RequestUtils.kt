@@ -1,5 +1,6 @@
 package com.amonteiro.a2023_07_aston_2
 
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -7,7 +8,7 @@ import okhttp3.Request
 //Utilisation
 
 fun main() {
-    println(RequestUtils.loadWeather(43.600000, 1.433333 ))
+    println(RequestUtils.getISSPosition())
 }
 
 object RequestUtils {
@@ -37,6 +38,14 @@ object RequestUtils {
         return gson.fromJson(json, WeatherBean::class.java)
 
         //Controle extraction
+    }
+
+    fun getISSPosition() : LatLng {
+        //requete
+        var json : String =  sendGet("http://api.open-notify.org/iss-now.json")
+
+        //parsing
+        return gson.fromJson(json, ISSResultBean::class.java).iss_position
     }
 
     //Méthode qui prend en entrée une url, execute la requête

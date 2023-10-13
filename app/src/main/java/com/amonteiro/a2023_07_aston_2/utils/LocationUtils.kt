@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 
 object LocationUtils {
 
+
     fun getLastKnownLocation(c: Context): Location? {
 
         //Contrôle de la permission
@@ -23,4 +24,6 @@ object LocationUtils {
         return lm.getProviders(true).map { lm.getLastKnownLocation(it) }
             .minByOrNull { it?.accuracy ?: Float.MAX_VALUE }
     }
+
+
 }
