@@ -11,6 +11,7 @@ fun main() {
     tab.map { it.description }.sortedBy { it }.forEach { println(it) }
 }
 
+//https://rapidapi.com/theoddsapi/api/live-sports-odds/
 object AmericanSportAPI {
 
     fun loadAllSports(all: Boolean = false): List<SportBean> {

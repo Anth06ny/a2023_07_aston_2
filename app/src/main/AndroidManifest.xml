@@ -15,8 +15,11 @@
         <activity
             android:name=".WeatherAroundActivity"
             android:exported="true" />
+
+        <activity android:name=".MexicanFoodActivity" />
+
         <activity
-            android:name=".MexicanFoodActivity"
+            android:name=".MexicanFoodDetailActivity"
             android:exported="true" />
         <activity
             android:name=".AmericanSportActivity"

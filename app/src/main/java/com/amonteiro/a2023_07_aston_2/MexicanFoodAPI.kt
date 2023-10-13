@@ -5,12 +5,38 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 fun main() {
-    println(MexicanFoodAPI.loadFoodById(4))
+    println(MexicanFoodAPI.loadListFood())
 }
 
 object MexicanFoodAPI {
 
-    fun loadFoodById(id:Int = 4): MexicanFoodBean {
+    fun loadListFood(): List<MexicanFoodTitleBean> {
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url("https://the-mexican-food-db.p.rapidapi.com/")
+            .get()
+            .addHeader("X-RapidAPI-Key", "93329c7cf9msha136bd696cd1040p10a1dejsnbc52cdb0746e")
+            .addHeader("X-RapidAPI-Host", "the-mexican-food-db.p.rapidapi.com")
+            .build()
+
+        client.newCall(request).execute().use {
+
+            if (!it.isSuccessful) {
+
+                val errorJson = it.body.string()
+                if (!errorJson.isNullOrBlank()) {
+                    val error = Gson().fromJson(errorJson, ErrorBean::class.java)
+                    throw Exception("Erreur : " + error.message)
+                }
+                throw Exception("Erreur code incorrect : ${it.code}\n ${it.body.string()}")
+            }
+
+            return Gson().fromJson(it.body.string(), Array<MexicanFoodTitleBean>::class.java).toList()
+        }
+    }
+
+    fun loadFoodById(id: Int = 4): MexicanFoodBean {
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -25,7 +51,7 @@ object MexicanFoodAPI {
             if (!it.isSuccessful) {
 
                 val errorJson = it.body.string()
-                if(!errorJson.isNullOrBlank()) {
+                if (!errorJson.isNullOrBlank()) {
                     val error = Gson().fromJson(errorJson, ErrorBean::class.java)
                     throw Exception("Erreur : " + error.message)
                 }
@@ -33,7 +59,7 @@ object MexicanFoodAPI {
             }
 
             val json = it.body.string()
-            val tab = Gson().fromJson(json,MexicanFoodBean::class.java)
+            val tab = Gson().fromJson(json, MexicanFoodBean::class.java)
 
             return tab
         }
@@ -48,5 +74,12 @@ data class MexicanFoodBean(
     var ingredients: List<String>,
     var portion: String,
     var time: String,
+    var title: String
+)
+
+data class MexicanFoodTitleBean(
+    var difficulty: String,
+    var id: Int,
+    var image: String,
     var title: String
 )

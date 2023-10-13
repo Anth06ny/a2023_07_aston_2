@@ -3,51 +3,72 @@ package com.amonteiro.a2023_07_aston_2
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.amonteiro.a2023_07_aston_2.databinding.ActivityWeatherBinding
-import com.squareup.picasso.Picasso
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import com.amonteiro.a2023_07_aston_2.databinding.ActivityMexicanFoodBinding
 import kotlin.concurrent.thread
+
 
 class MexicanFoodActivity : AppCompatActivity() {
 
-    //ON utilise le même XML que dans Weather Activity
-    val binding by lazy { ActivityWeatherBinding.inflate(layoutInflater) }
+
+
+    val binding by lazy { ActivityMexicanFoodBinding.inflate(layoutInflater) }
+    val model by lazy { ViewModelProvider(this)[MexicanFoodViewModel::class.java] }
+
+    val adapter = MexicanListAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.btLoad.setOnClickListener {
+        binding.rv.layoutManager = GridLayoutManager(this, 2)
+        binding.rv.adapter = adapter
 
-            binding.progressBar.isVisible = true
-            binding.tvError.isVisible = false
+        model.listLiveData.observe(this){
+            adapter.submitList(it)
+        }
 
-            val id = binding.et.text.toString()
+        model.errorLiveData.observe(this){
+            binding.tvError.isVisible = it.isNotBlank()
+            binding.tvError.text = it
+        }
 
-            //Tache asynchrone
+
+        model.runInProgress.observe(this){
+            binding.progressBar2.isVisible = it
+        }
+
+        model.loadData()
+
+    }
+
+
+
+}
+
+class MexicanFoodViewModel : ViewModel(){
+    val listLiveData = MutableLiveData<List<MexicanFoodTitleBean>>(ArrayList())
+    val errorLiveData = MutableLiveData("")
+    val runInProgress = MutableLiveData(false)
+
+    fun loadData(){
+        if(listLiveData.value.isNullOrEmpty()) {
+            runInProgress.postValue(true)
+
             thread {
                 try {
-                    val food = MexicanFoodAPI.loadFoodById(id.toInt())
-
-                    //Mise à jour graphique
-                    runOnUiThread {
-                        binding.tv.text = food.title + "\n\n" + food.description
-                        binding.progressBar.isVisible = false
-
-                        //Charge l'image à partir d'une URL
-                        Picasso.get().load(food.image).into(binding.imageView)
-                    }
+                    listLiveData.postValue(MexicanFoodAPI.loadListFood())
                 }
-                catch(e:Exception) {
+                catch (e: Exception) {
                     e.printStackTrace()
-                    //Mise à jour graphique
-                    runOnUiThread {
-                        binding.tvError.text = "Une erreur est survenue ${e.message}"
-                        binding.tvError.isVisible = true
-                        binding.progressBar.isVisible = false
-                    }
+                    errorLiveData.postValue("Une erreur est survenue : "  + e.message)
                 }
-            }
+                runInProgress.postValue(false)
 
+            }
         }
     }
 }
