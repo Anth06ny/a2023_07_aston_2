@@ -49,13 +49,5 @@ class MexicanFoodDetailActivity : AppCompatActivity() {
             }
 
         }
-
-        val id = intent.getIntExtra("id", -1)
-        if(id != -1) {
-            //ici je mets l'entier sous forme de string pour ne pas déclancher l'apper au String resources (R.string.blabla)
-            binding.et.setText("$id")
-            //Déclanche le clic du bouton
-            binding.btLoad.performClick()
-        }
     }
 }
