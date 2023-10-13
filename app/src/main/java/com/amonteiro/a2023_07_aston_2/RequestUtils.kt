@@ -6,11 +6,22 @@ import okhttp3.Request
 
 //Utilisation
 
+fun main() {
+    println(RequestUtils.loadWeather(43.600000, 1.433333 ))
+}
 
 object RequestUtils {
 
     private val client = OkHttpClient()
     private val gson = Gson()
+
+    fun loadWeather(lat:Double, lon:Double) : WeatherBean {
+        //requete
+        var json : String =  sendGet("https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=b80967f0a6bd10d23e44848547b26550&units=metric&lang=fr")
+
+        //parsing
+        return gson.fromJson(json, WeatherBean::class.java)
+    }
 
     fun loadWeather(cityName : String) : WeatherBean {
 
